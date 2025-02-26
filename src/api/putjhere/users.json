@@ -1,0 +1,23 @@
+
+{
+    "users": [
+      {
+        "id":1,
+        "name": "Jonny mnemonic",
+        "email": "john@example.com"
+      },
+      {
+        "id":2,
+        "name": "jon wick",
+        "email": "jwick@example.com"
+      },
+      {
+        "id":5,
+        "name": "joe mama",
+        "email": "nunya@example.com"
+      }
+    ]
+  }
+
+  
+

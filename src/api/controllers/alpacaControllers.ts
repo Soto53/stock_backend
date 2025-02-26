@@ -8,5 +8,3 @@ export const getStockSnapshot = async (req: Request, res: Response) => {
   console.log('Stock Data:', stockData);
   res.json(stockData);
 };
-
-const = TextDecoderStream; 

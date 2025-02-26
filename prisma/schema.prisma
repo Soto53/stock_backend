@@ -16,7 +16,7 @@ datasource db {
 model Company {
   id             Int      @id @default(autoincrement())
   news_id        News[]
-  stockprice     Float?
+  stock_price    Float?
   symbol         String   @unique
   name           String?
   exchange       String?

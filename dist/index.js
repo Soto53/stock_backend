@@ -4,19 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const index_1 = __importDefault(require("./api/routes/index"));
-const userServices_1 = require("./api/services/userServices");
+const userRoutes_1 = __importDefault(require("./api/routes/userRoutes"));
+const companyRoutes_1 = __importDefault(require("./api/routes/companyRoutes"));
+const alpacaRoutes_1 = __importDefault(require("./api/routes/alpacaRoutes"));
 const app = (0, express_1.default)();
-const PORT = process.env.PORT || 3001;
+const port = 3000;
 app.use(express_1.default.json());
-app.use('/api', index_1.default);
-// app.get('/api', (req:Request, res: Response)=>{
-//     const params= req.
-//     res.json({message:'Hello from the API!'});
-// });
-// Route to trigger data fetch from the external API
-app.get('/fetch-data', userServices_1.fetchDataFromAPI);
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.use('/api', userRoutes_1.default);
+app.use('/api', companyRoutes_1.default);
+app.use('/api', alpacaRoutes_1.default);
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:3000`);
 });
 exports.default = app;

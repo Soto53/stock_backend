@@ -1,24 +1,19 @@
-import express, {Request,Response} from 'express';
-import router from './api/routes/index';
-import {fetchDataFromAPI} from './api/services/userServices'
+import express from 'express';
+import userRoutes from './api/routes/userRoutes';
+import companyRoutes from './api/routes/companyRoutes';
+import alpacaRoutes from './api/routes/alpacaRoutes';
 
 
 const app = express();
-const PORT = process.env.PORT|| 3001;
+const port = 3000;
 
-app.use(express.json())
-app.use('/api', router)
-// app.get('/api', (req:Request, res: Response)=>{
-//     const params= req.
-//     res.json({message:'Hello from the API!'});
-// });
+app.use(express.json());
+app.use('/api', userRoutes);
+app.use('/api', companyRoutes);
+app.use('/api', alpacaRoutes);
 
-
-// Route to trigger data fetch from the external API
-app.get('/fetch-data', fetchDataFromAPI);
-
-app.listen(PORT,()=>{
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:3000`);
 });
 
 export default app;

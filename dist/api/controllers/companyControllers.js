@@ -13,9 +13,9 @@ exports.deleteCompany = exports.updateCompany = exports.getCompanies = exports.c
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const createCompany = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume } = req.body;
+    const { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, figi_code } = req.body;
     const company = yield prisma.company.create({
-        data: { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, datetime: new Date() },
+        data: { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, datetime: new Date(), figi_code, },
     });
     res.json(company);
 });
@@ -27,10 +27,10 @@ const getCompanies = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getCompanies = getCompanies;
 const updateCompany = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume } = req.body;
+    const { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, figi_code } = req.body;
     const company = yield prisma.company.update({
         where: { id: Number(id) },
-        data: { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume },
+        data: { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, figi_code },
     });
     res.json(company);
 });

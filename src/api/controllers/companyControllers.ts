@@ -4,9 +4,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const createCompany = async (req: Request, res: Response) => {
-  const { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume } = req.body;
+  const { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, figi_code } = req.body;
   const company = await prisma.company.create({
-    data: { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, datetime: new Date() },
+    data: { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, datetime: new Date(), figi_code, },
   });
   res.json(company);
 };
@@ -20,10 +20,10 @@ export const getCompanies = async (req: Request, res: Response) => {
 
 export const updateCompany = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume } = req.body;
+  const { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, figi_code } = req.body;
   const company = await prisma.company.update({
     where: { id: Number(id) },
-    data: { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume },
+    data: { symbol, stock_price, name, exchange, open, high, low, close, volume, previous_close, change, average_volume, figi_code },
   });
   res.json(company);
 };

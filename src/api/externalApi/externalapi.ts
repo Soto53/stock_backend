@@ -5,7 +5,7 @@ import {DataEater} from './DataConsumption';
 export const getExternalData = async  () => {
 
     console.log("you made it here");
-    const Apires = await axios.get('https://api.marketaux.com/v1/news/all?symbols=TSLA,AMZN,MSFT&filter_entities=true&language=en&api_token=vixRNSzfHufwyMBzESZuJEnCyxoG9fuy69AL2uri');
+    const Apires = await axios.get('https://api.twelvedata.com/ad?apikey=459e4dfc97e6485997ef59ff4f51c2d9&interval=1min&symbol=AAPL');
     // const externalData = Apires.data;
     console.log('almost there');
 

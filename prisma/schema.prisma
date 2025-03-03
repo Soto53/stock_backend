@@ -29,7 +29,7 @@ model Company {
   previous_close Float?
   change         Float?
   average_volume Int?
-  figi_code      String   @unique
+  figi_code      String?
 }
 
 model News {

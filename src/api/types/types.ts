@@ -22,7 +22,7 @@ export interface Company{
   previous_close?:number,
   change?:number,
   average_volume?:number,
-  figi_code: string,
+  figi_code?: string,
 }
 
 export interface CompanyData {
@@ -43,10 +43,119 @@ interface Meta {
   exchange: string,
   mic_code: string,
   type: string,
-  indicator: indicator[],
+  // indicator: indicator[],
 
 }
 
-interface indicator{
-  name: string,
+export interface alpachaInterface{
+  dailyBar: {
+    close: number,
+    high: number ,
+    low: number ,
+    numberoftrades: number,
+    openPrice: number ,
+    Timestramp: string ,
+    Volume: number,
+    VolumeWeighted: number,
+  },
+  latestQuote: {
+    AskPrice: number,
+    AskSize: number,
+    AskExchange:string,
+    BidPrice: number,
+    BidSize: number,
+    BidExchange: string,
+    Conditions:conditions,
+    TimeStamp: string,
+    Tape: string,
+  },
+  latestTrade: {
+    Conditions: conditions,
+    Trade_id: number,
+    Price: number,
+    Size: number,
+    Timestamp: string,
+    Exchange: string,
+    Tape: string,
+  },
+  minuteBar: {
+    ClosePrice: number,
+    HighPrice: number,
+    LowPrice: number,
+    NumberOfTrades: number,
+    OpenPrice: number,
+    Timestamp: string,
+    Volume: number,
+    VolumeWeightedAveragePrice: number,
+  },
+  prevDailyBar: {
+    ClosePrice: number,
+    HighPrice: number,
+    LowPrice: number,
+    NumberOfTrades: number,
+    OpenPrice: number,
+    TimeStamp: string,
+    Volume: number,
+    VolumeWeightedAveragePrice: number,
+  },
+  symbol: string,
+}
+interface conditions{
+  condition: string[],
+}
+// interface dailyBarValue{
+//   close: number,
+//   high: number ,
+//   low: number ,
+//   numberoftrades: number,
+//   openPrice: number ,
+//   Timestramp: string ,
+//   Volume: number,
+//   VolumeWeighted: number,
+// }
+
+// interface latestQuoteValue{
+//   AskPrice: number,
+//   AskSize: number,
+//   AskExchange:string,
+//   BidPrice: number,
+//   BidSize: number,
+//   BidExchange: string,
+//   Conditions:conditions,
+//   TimeStamp: string,
+//   Tape: string,
+// }
+
+
+
+// interface latestTradeValue{
+//   Conditions: conditions,
+//   Trade_id: number,
+//   Price: number,
+//   Size: number,
+//   Timestamp: string,
+//   Exchange: string,
+//   Tape: string,
+// }
+
+interface minuteBarValue{
+  ClosePrice: number,
+  HighPrice: number,
+  LowPrice: number,
+  NumberOfTrades: number,
+  OpenPrice: number,
+  Timestamp: string,
+  Volume: number,
+  VolumeWeightedAveragePrice: number,
+}
+
+interface preDailyBarValue{
+  ClosePrice: number,
+  HighPrice: number,
+  LowPrice: number,
+  NumberOfTrades: number,
+  OpenPrice: number,
+  TimeStamp: string,
+  Volume: number,
+  VolumeWeightedAveragePrice: number,
 }

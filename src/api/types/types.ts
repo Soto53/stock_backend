@@ -7,32 +7,32 @@ export interface User{
     email: string,
   }
 
-export interface Company{
-  id: number,
-  stockprice?: number, 
-  symbol: string, 
-  name?: string, 
-  exchange?:string,
-  datetime: Date,
-  open?: number,
-  high?: number,
-  low?: number,
-  close?:number,
-  volume?:number,
-  previous_close?:number,
-  change?:number,
-  average_volume?:number,
-  figi_code?: string,
-}
+// export interface Company{
+//   id: number,
+//   stockprice?: number, 
+//   symbol: string, 
+//   name?: string, 
+//   exchange?:string,
+//   datetime: Date,
+//   open?: number,
+//   high?: number,
+//   low?: number,
+//   close?:number,
+//   volume?:number,
+//   previous_close?:number,
+//   change?:number,
+//   average_volume?:number,
+//   figi_code?: string,
+// }
 
-export interface CompanyData {
-  datetime: string; // Assuming datetime is a string, adjust accordingly
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-}
+// export interface CompanyData {
+//   datetime: string; // Assuming datetime is a string, adjust accordingly
+//   open: number;
+//   high: number;
+//   low: number;
+//   close: number;
+//   volume: number;
+// }
 
 interface Meta {
 
@@ -47,6 +47,8 @@ interface Meta {
 
 }
 
+
+// this one works
 export interface alpachaInterface{
   dailyBar: {
     close: number,

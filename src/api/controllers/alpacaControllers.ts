@@ -31,7 +31,8 @@ export const getSymbol = async (req: Request, res: Response) => {
 //   res.json({ addDb });
 // };
 
-export const addingStock = async (req: Request, res: Response) => {
+export const addStockController = async (req: Request, res: Response) => {
+  console.log('req', req);
   const { symbol } = req.params;
 
     const newStock = await addStock(symbol);

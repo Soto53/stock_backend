@@ -1,5 +1,5 @@
 import express from 'express';
-import { getStockSnapshot, getMapped, getSymbol, addingStock } from '../controllers/alpacaControllers';
+import { getStockSnapshot, getMapped, getSymbol, addStockController } from '../controllers/alpacaControllers';
 
 const router = express.Router();
 
@@ -9,6 +9,6 @@ router.get('/mapped/:symbol/snapshot', getMapped);
 
 router.get('/symbol/:symbol', getSymbol);
 
-router.post('/addStock/:symbol', addingStock);
+router.post('/addStock/:symbol', addStockController);
 
 export default router;

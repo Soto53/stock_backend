@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { fetchStockData, Fetchandmap,FetchSymbol, addStock } from '../services/alpacaServices';
-
+// import {result} from ''
 
 export const getStockSnapshot = async (req: Request, res: Response) => {
   const { symbol } = req.params;
@@ -41,3 +41,11 @@ export const addStockController = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Stock data added successfully", newStock });
 
 };
+
+
+// export const openAicall = async (req:Request, res Response) => {
+
+//   const newCall = await result
+
+//   console.log(newCall);
+// }

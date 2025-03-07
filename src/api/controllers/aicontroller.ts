@@ -20,7 +20,7 @@ const tools:any = [
     type: "function",
     function: {
       name: "get_stock_data",
-      description: "Get the symbol for a given stock.",
+      description: "Get the symbol for a given stock using a function and not preknown knowledge.",
       parameters: {
         type : "object", 
         properties: {
@@ -70,14 +70,19 @@ interface Completion{
 
 console.log("2");
 
-function hasToolCalls (completion:any): boolean {
+// function hasToolCalls (completion:any): boolean {
 
-  console.log("3");
-  if (completion.choices[0].message){
-    return true
-  }
-return false;
+//   console.log("3");
+//   if (completion.choices[0].message){
+//     return true
+//   }
+// return false;
+// }
+
+function hasToolCalls (completion:any): boolean {
+  return completion.choices[0].message?.tool_calls !== undefined;
 }
+
 async function  processCompletion (completion:any){
   console.log("4");
   if(!hasToolCalls(completion)){
@@ -101,10 +106,15 @@ return
 
 
 }
-
+console.log("API response:", completion.choices[0].message.tool_calls); 
 processCompletion(completion);
 
-console.log(completion.choices[0].message.tool_calls);
 
+// console.log(completion.choices[0].message.tool_calls);
+if (completion.choices[0].message.tool_calls) {
+  console.log(completion.choices[0].message.tool_calls);
+} else {
+  console.log("No tool calls found in the message.");
+}
 
 }

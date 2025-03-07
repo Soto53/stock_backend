@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:D@ta8as3@localhost:5432/bootcamp"
+  url      = ""
 }
 
 model Company {

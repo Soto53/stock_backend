@@ -43,9 +43,3 @@ export const addStockController = async (req: Request, res: Response) => {
 };
 
 
-// export const openAicall = async (req:Request, res Response) => {
-
-//   const newCall = await result
-
-//   console.log(newCall);
-// }

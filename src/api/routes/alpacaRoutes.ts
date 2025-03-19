@@ -11,4 +11,6 @@ router.get('/symbol/:symbol', getSymbol);
 
 router.post('/addStock/:symbol', addStockController);
 
+// router.get('/socket/:symbol',socketData);
+
 export default router;

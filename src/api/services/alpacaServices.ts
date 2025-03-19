@@ -5,9 +5,9 @@ import {alpachaInterface} from '../types/types'
 const prisma = new PrismaClient(); 
 
 
-const ALPACA_API_KEY = process.env.ALPACA_API_KEY || 'PKMQH30TFV7J4VZ7XD2J';
-const ALPACA_API_SECRET = process.env.ALPACA_API_SECRET || 'AtoRkjIvkgnmcOZQRe8B7WZGKZdjFgbHF3Ov4gz9';
-const ALPACA_API_BASE_URL = 'https://data.alpaca.markets/v2';
+const ALPACA_API_KEY = process.env.ALPACA_API_KEY ;
+const ALPACA_API_SECRET = process.env.ALPACA_API_SECRET;
+const ALPACA_API_BASE_URL = process.env.ALPACA_BASE_URL;
 
 const alpacaApi = axios.create({
   baseURL: ALPACA_API_BASE_URL,
@@ -76,8 +76,9 @@ export const Fetchandmap = async (symbol: string): Promise<alpachaInterface> => 
     symbol: response.data.symbol,
   };
 
+ 
   console.log('Mapped Data:', mappedResponse);
-
+console.log("conditions",response.data.latestTrade.c);
   return mappedResponse;
 };
 
@@ -104,6 +105,29 @@ export const fetchStockData = async (symbol: string) => {
   return (response.data);
    
 };
+
+
+export const existingStock = async(symbol:string)=>{
+
+try{
+
+
+  // Check if stock exists in DB
+  const getStock = await prisma.company.findUnique({
+    where: { symbol: symbol },
+  });
+
+  // If stock already exists, return it
+  if (getStock) {
+    console.log("Stock already exists:", getStock);
+    return getStock;
+  }
+
+}
+catch(error){
+console.log("getting stuck here")
+}
+}
 
 
 export const addStock = async (symbol: string) => {
@@ -149,3 +173,10 @@ export const addStock = async (symbol: string) => {
     throw new Error("Error adding stock data");
   }
 };
+
+
+// export const getSocketData = async(symbol:string){
+
+// await axios.get("")
+
+// }

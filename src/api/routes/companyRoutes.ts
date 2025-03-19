@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/company', createCompany);
 router.get('/companies', getCompanies);
 router.put('/company/:id', updateCompany);
-router.delete('/company/:id', deleteCompany);
+router.delete('/delete/company/:symbol', deleteCompany);
 
 export default router;
 

@@ -30,8 +30,10 @@ export const updateCompany = async (req: Request, res: Response) => {
 
 
 export const deleteCompany = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  await prisma.company.delete({ where: { id: Number(id) } });
+  const { symbol} = req.params;
+   console.log("ping");
+  await prisma.company.delete({ where: { symbol} });
+ 
   res.json({ message: 'Company deleted' });
 };
 

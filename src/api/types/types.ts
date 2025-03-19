@@ -67,12 +67,12 @@ export interface alpachaInterface{
     BidPrice: number,
     BidSize: number,
     BidExchange: string,
-    Conditions:conditions,
+    Conditions:conditions[],
     TimeStamp: string,
     Tape: string,
   },
   latestTrade: {
-    Conditions: conditions,
+    Conditions: conditions[],
     Trade_id: number,
     Price: number,
     Size: number,
@@ -103,5 +103,5 @@ export interface alpachaInterface{
   symbol: string,
 }
 interface conditions{
-  condition: string[],
+  condition: string,
 }

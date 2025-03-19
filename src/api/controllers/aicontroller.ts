@@ -1,11 +1,11 @@
 import { OpenAI } from "openai";
-import {Fetchandmap} from '../services/alpacaServices'
+import {Fetchandmap, existingStock, addStock} from '../services/alpacaServices'
 import { Completion } from "openai/resources/completions.mjs";
 import{Request, Response} from 'express'
 // import {getStockData} from "../services/alpacaServices";
  
 const openai = new OpenAI({
-  apiKey: '',
+  apiKey: process.env. Open_ai_key,
 });
 
 
@@ -70,6 +70,8 @@ interface Completion{
 
 console.log("2");
 
+await processCompletion(completion);
+
 // function hasToolCalls (completion:any): boolean {
 
 //   console.log("3");
@@ -83,38 +85,56 @@ function hasToolCalls (completion:any): boolean {
   return completion.choices[0].message?.tool_calls !== undefined;
 }
 
-async function  processCompletion (completion:any){
+async function processCompletion(completion: any) {
   console.log("4");
-  if(!hasToolCalls(completion)){
-console.log("not tool_calls found in completion")
-console.log("tool_calls?",completion.choices[0].message)
-return
+
+  // Check if tool_calls exist in the response
+  if (!hasToolCalls(completion)) {
+    console.log("No tool_calls found in completion");
+    console.log("tool_calls?", completion.choices[0].message);
+    return;
   }
-  const toolCall = completion.choices[0].message.tool_calls?.content
-    try{
-      console.log(toolCall)
-      const args = toolCall;
-      console.log(args);
-      res.json(toolCall)
-    // const result = await getStockData(args.symbol);
-   
+
+  try {
+    // Loop through each tool call
+    for (const toolCall of completion.choices[0].message.tool_calls) {
+      const name = toolCall.function.name;
+      const args = JSON.parse(toolCall.function.arguments);
+      const symbol = args.symbol;
+
+      console.log("This is what args look like", args);
+
+      if (name === "get_stock_data") {
+       
+        const stock = await existingStock(symbol);
+
+        if (stock) {
+          
+          console.log("Stock found:", stock);
+          res.json(stock);  
+        } 
+        else {
+         
+          try {
+            const stockData = await addStock(symbol);
+            console.log("Stock Data:", stockData);
+           
+
+            res.json(stockData); 
+            return; 
+          } catch (error) {
+            console.log("Error fetching stock data:", error);
+         
+            return; 
+          }
+        }
+      }
     }
-    catch(error){
-      console.log(error);
-    }
-
-
-
+  } catch (error) {
+    console.error("Error processing tool calls:", error);
+    
+  }
 }
-console.log("API response:", completion.choices[0].message.tool_calls); 
-processCompletion(completion);
-
-
-// console.log(completion.choices[0].message.tool_calls);
-if (completion.choices[0].message.tool_calls) {
-  console.log(completion.choices[0].message.tool_calls);
-} else {
-  console.log("No tool calls found in the message.");
 }
 
-}
+

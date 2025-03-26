@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 const ALPACA_API_KEY = process.env.ALPACA_API_KEY ;
 const ALPACA_API_SECRET = process.env.ALPACA_API_SECRET;
-const ALPACA_API_BASE_URL = process.env.ALPACA_BASE_URL;
+const ALPACA_API_BASE_URL = 'https://data.alpaca.markets/v2'
 
 const alpacaApi = axios.create({
   baseURL: ALPACA_API_BASE_URL,

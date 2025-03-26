@@ -4,6 +4,7 @@ import companyRoutes from './api/routes/companyRoutes';
 import alpacaRoutes from './api/routes/alpacaRoutes';
 import cors from 'cors'
 import airoutes from './api/routes/airoutes'
+import marketNewsRoutes from './api/routes/marketNewsRoutes'
 
 const app = express();
 const port = 3000;
@@ -16,6 +17,7 @@ app.use('/api', userRoutes);
 app.use('/api', companyRoutes);
 app.use('/api', alpacaRoutes);
 app.use('/api', airoutes);
+app.use('/api', marketNewsRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:3000`);

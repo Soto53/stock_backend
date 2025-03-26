@@ -4,8 +4,11 @@ import { Completion } from "openai/resources/completions.mjs";
 import{Request, Response} from 'express'
 // import {getStockData} from "../services/alpacaServices";
  
+const ApiKey = process.env.OPEN_AI_KEY;
+
+
 const openai = new OpenAI({
-  apiKey: process.env. Open_ai_key,
+  apiKey: ApiKey,
 });
 
 
@@ -28,8 +31,13 @@ const tools:any = [
             type : "string" ,
           description:"the ticker symbol for the selected stock"
           },
+          companyHistory: {
+            type: "string",
+            descriptition:"a detailed description of the company"
+          }
         },
-        required: ["symbol"],
+        required: ["symbol","companyHistory"],
+        
 
         additionalProperties: false //what do additional properties look like
       },
@@ -64,22 +72,10 @@ interface Choice{
   message:Message
 }
 
-interface Completion{
-  choices:Choice[]
-}
 
 console.log("2");
 
 await processCompletion(completion);
-
-// function hasToolCalls (completion:any): boolean {
-
-//   console.log("3");
-//   if (completion.choices[0].message){
-//     return true
-//   }
-// return false;
-// }
 
 function hasToolCalls (completion:any): boolean {
   return completion.choices[0].message?.tool_calls !== undefined;
@@ -101,9 +97,11 @@ async function processCompletion(completion: any) {
       const name = toolCall.function.name;
       const args = JSON.parse(toolCall.function.arguments);
       const symbol = args.symbol;
+      const companyHistory = args.companyHistory;
 
+      console.log("companyHistory args",companyHistory);
       console.log("This is what args look like", args);
-
+      
       if (name === "get_stock_data") {
        
         const stock = await existingStock(symbol);

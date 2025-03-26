@@ -7,23 +7,23 @@ export interface User{
     email: string,
   }
 
-// export interface Company{
-//   id: number,
-//   stockprice?: number, 
-//   symbol: string, 
-//   name?: string, 
-//   exchange?:string,
-//   datetime: Date,
-//   open?: number,
-//   high?: number,
-//   low?: number,
-//   close?:number,
-//   volume?:number,
-//   previous_close?:number,
-//   change?:number,
-//   average_volume?:number,
-//   figi_code?: string,
-// }
+export interface Company{
+
+  stockprice?: number, 
+  symbol: string, 
+  name?: string, 
+  exchange?:string,
+  datetime: Date,
+  open?: number,
+  high?: number,
+  low?: number,
+  close?:number,
+  volume?:number,
+  previous_close?:number,
+  change?:number,
+  average_volume?:number,
+  figi_code?: string,
+}
 
 // export interface CompanyData {
 //   datetime: string; // Assuming datetime is a string, adjust accordingly
@@ -104,4 +104,61 @@ export interface alpachaInterface{
 }
 interface conditions{
   condition: string,
+}
+
+
+
+// Represents a tool call within a message.
+interface ChatToolCall {
+  id: string;
+  type: string;
+  function: Record<string, any>; // Adjust based on the actual properties of the function call.
+}
+
+// Represents a message returned in the chat completion.
+interface ChatCompletionMessage {
+  role: 'assistant' | 'user' | 'system';
+  content: string | null;
+  tool_calls?: ChatToolCall[];
+  refusal?: any; // Define a more specific type if known.
+  annotations?: any[]; // Define a more specific type if known.
+}
+
+// Represents a single choice in the chat completion response.
+interface ChatCompletionChoice {
+  index: number;
+  message: ChatCompletionMessage;
+  logprobs: null; // Chat completions may not provide logprobs.
+  finish_reason: 'stop' | 'length' | 'tool_calls' | 'content_filter' | 'function_call' | string;
+}
+
+// Detailed token usage information.
+interface ChatUsageDetails {
+  cached_tokens: number;
+  audio_tokens: number;
+}
+
+interface ChatUsage {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  prompt_tokens_details: ChatUsageDetails;
+  completion_tokens_details: {
+    reasoning_tokens: number;
+    audio_tokens: number;
+    accepted_prediction_tokens: number;
+    rejected_prediction_tokens: number;
+  };
+}
+
+// Represents the overall chat completion response.
+export interface ChatCompletionResponse {
+  id: string;
+  object: 'chat.completion';
+  created: number;
+  model: string;
+  choices: ChatCompletionChoice[];
+  usage: ChatUsage;
+  service_tier: string;
+  system_fingerprint: string;
 }

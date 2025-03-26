@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {PrismaClient} from '@prisma/client'
-import {alpachaInterface} from '../types/types'
+import {alpachaInterface, Company} from '../types/types'
 
 const prisma = new PrismaClient(); 
 
@@ -107,30 +107,28 @@ export const fetchStockData = async (symbol: string) => {
 };
 
 
-export const existingStock = async(symbol:string)=>{
+export const existingStock = async (symbol: string):Promise<null | Company> => {
+  try {
+    // Check if stock exists in DB
+    const company = await prisma.company.findUnique({
+      where: { symbol: symbol },
+    });
 
-try{
+    // If stock already exists, return it
+    if (company) {
+      console.log("Stock already exists:", company);
+      return company as Company;
+    }
+    return null;
 
-
-  // Check if stock exists in DB
-  const getStock = await prisma.company.findUnique({
-    where: { symbol: symbol },
-  });
-
-  // If stock already exists, return it
-  if (getStock) {
-    console.log("Stock already exists:", getStock);
-    return getStock;
+  } catch (error) {
+    console.log("getting stuck here");
+    throw new Error("Error fetching stock data");
   }
-
-}
-catch(error){
-console.log("getting stuck here")
-}
-}
+};
 
 
-export const addStock = async (symbol: string) => {
+export const addStock = async (symbol: string): Promise< Company > => {
   console.log("addStock initiated");
 
   try {
@@ -140,12 +138,6 @@ export const addStock = async (symbol: string) => {
     const getStock = await prisma.company.findUnique({
       where: { symbol: symbol },
     });
-
-    // If stock already exists, return it
-    if (getStock) {
-      console.log("Stock already exists:", getStock);
-      return getStock;
-    }
 
     // Create new stock if not found
     const newStockAction = await prisma.company.create({
@@ -167,7 +159,7 @@ export const addStock = async (symbol: string) => {
     });
 
     console.log("New Stock Added:", newStockAction);
-    return newStockAction;
+    return newStockAction as Company;
   } catch (error) {
     console.error("Error adding stock data:", error);
     throw new Error("Error adding stock data");

@@ -1,138 +1,101 @@
 import { OpenAI } from "openai";
-import {Fetchandmap, existingStock, addStock} from '../services/alpacaServices'
-import { Completion } from "openai/resources/completions.mjs";
-import{Request, Response} from 'express'
-// import {getStockData} from "../services/alpacaServices";
- 
-const ApiKey = process.env.OPEN_AI_KEY;
+import {
+  Fetchandmap,
+  existingStock,
+  addStock,
+} from "../services/alpacaServices";
+import { ChatCompletionResponse } from "../types/types";
+import { Request, Response, NextFunction, RequestHandler } from "express";
+import { Company } from "@prisma/client/wasm";
 
+
+const ApiKey = process.env.OPEN_AI_KEY;
 
 const openai = new OpenAI({
   apiKey: ApiKey,
 });
 
 
-export async function openAiCall (req:Request, res:Response){
-console.log("1");
+export const openAiCall: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
 
-  const query = req.body.query
-  console.log("query:",query);
-
-const tools:any = [
-  {
-    type: "function",
-    function: {
-      name: "get_stock_data",
-      description: "Get the symbol for a given stock using a function and not preknown knowledge.",
-      parameters: {
-        type : "object", 
-        properties: {
-          symbol: {
-            type : "string" ,
-          description:"the ticker symbol for the selected stock"
+  const query = req.body.query;
+  try {
+  const tools: any = [
+    {
+      type: "function",
+      function: {
+        name: "get_stock_data",
+        description:
+          "Get the symbol for a given stock using a function and not preknown knowledge.",
+        parameters: {
+          type: "object",
+          properties: {
+            symbol: {
+              type: "string",
+              description: "the ticker symbol for the selected stock",
+            },
+            companyHistory: {
+              type: "string",
+              description: "a detailed description of the company",
+            },
           },
-          companyHistory: {
-            type: "string",
-            descriptition:"a detailed description of the company"
-          }
+          required: ["symbol", "companyHistory"],
+
+          additionalProperties: false, // aloows for exact paramater mathcing for downstream processes
         },
-        required: ["symbol","companyHistory"],
-        
-
-        additionalProperties: false //what do additional properties look like
+        strict: true, // defines strict paramater constraints for downstream processes
       },
-      strict:true // i guess
     },
- 
-  },
-];
+  ];
 
- const messages :any =[
-  { role: "user", content: `${query}` },
-];
+  const messages: any = [{ role: "user", content: `${query}` }];
 
+  const chatCompletion = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages,
+    tools,
+    store: true,
+  }) as ChatCompletionResponse;
 
- const completion =  await openai.chat.completions.create({
-  model: "gpt-4o",  
-  messages,
-  tools,
-  store:true, 
-});
-
-
-
-interface ToolCall{
-  content: string
+  const respone = await processCompletion(chatCompletion); 
+  res.status(200).json(respone);
 }
-interface Message{
-  tool_calls?:ToolCall ;
-
+catch (error) {
+  console.error("Error processing chat completion:", error);
+  res.status(500).json({ error: "Error processing chat completion" });
 }
-interface Choice{
-  message:Message
-}
+} 
 
 
-console.log("2");
 
-await processCompletion(completion);
-
-function hasToolCalls (completion:any): boolean {
-  return completion.choices[0].message?.tool_calls !== undefined;
-}
-
-async function processCompletion(completion: any) {
-  console.log("4");
-
-  // Check if tool_calls exist in the response
-  if (!hasToolCalls(completion)) {
-    console.log("No tool_calls found in completion");
-    console.log("tool_calls?", completion.choices[0].message);
-    return;
-  }
-
+async function processCompletion(
+  completion: ChatCompletionResponse
+): Promise< Partial<Company>> {
   try {
     // Loop through each tool call
-    for (const toolCall of completion.choices[0].message.tool_calls) {
-      const name = toolCall.function.name;
-      const args = JSON.parse(toolCall.function.arguments);
-      const symbol = args.symbol;
-      const companyHistory = args.companyHistory;
+    const toolCalls = completion.choices[0].message?.tool_calls;
 
-      console.log("companyHistory args",companyHistory);
-      console.log("This is what args look like", args);
-      
-      if (name === "get_stock_data") {
-       
+    if (toolCalls && Array.isArray(toolCalls)) {
+      for (const toolCall of toolCalls)  { 
+        const { name } = toolCall.function;
+        const args = JSON.parse(toolCall.function.arguments);
+        const { symbol, companyHistory } = args;
+
+        console.log("companyHistory args", companyHistory);
+
         const stock = await existingStock(symbol);
-
         if (stock) {
-          
-          console.log("Stock found:", stock);
-          res.json(stock);  
-        } 
-        else {
-         
-          try {
-            const stockData = await addStock(symbol);
-            console.log("Stock Data:", stockData);
-           
-
-            res.json(stockData); 
-            return; 
-          } catch (error) {
-            console.log("Error fetching stock data:", error);
-         
-            return; 
-          }
-        }
+          return stock
+        } else {
+          const stockData = await addStock(symbol);
+          console.log("Stock Data:", stockData);
+          return stockData;  
       }
     }
+  }
+   throw new Error("Error processing tool calls");
   } catch (error) {
     console.error("Error processing tool calls:", error);
-    
+    throw new Error("Error processing")
   }
 }
-}
-
-

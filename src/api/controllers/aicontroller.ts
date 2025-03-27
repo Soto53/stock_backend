@@ -59,7 +59,7 @@ const tools:any = [
   store:true, 
 });
 
-
+console.log("completion",completion)
 
 interface ToolCall{
   content: string
@@ -83,7 +83,7 @@ function hasToolCalls (completion:any): boolean {
 
 async function processCompletion(completion: any) {
   console.log("4");
-
+  console.log("completion",completion)
   // Check if tool_calls exist in the response
   if (!hasToolCalls(completion)) {
     console.log("No tool_calls found in completion");
@@ -105,11 +105,13 @@ async function processCompletion(completion: any) {
       if (name === "get_stock_data") {
        
         const stock = await existingStock(symbol);
-
+        console.log("completion message",completion.choices[0].message);
         if (stock) {
-          
+          console.log("completion",completion)
           console.log("Stock found:", stock);
-          res.json(stock);  
+          const response = {stock,companyHistory,args};
+          console.log("this is a collection for response",response);
+          res.json(response);  
         } 
         else {
          
@@ -117,8 +119,8 @@ async function processCompletion(completion: any) {
             const stockData = await addStock(symbol);
             console.log("Stock Data:", stockData);
            
-
-            res.json(stockData); 
+            console.log("completion",completion)
+            res.json({stockData,companyHistory,args}); 
             return; 
           } catch (error) {
             console.log("Error fetching stock data:", error);

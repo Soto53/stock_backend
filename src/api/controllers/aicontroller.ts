@@ -4,9 +4,9 @@ import {
   existingStock,
   addStock,
 } from "../services/alpacaServices";
-import { ChatCompletionResponse } from "../types/types";
+import { ChatCompletionResponse, Company } from "../types/types";
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import { Company } from "@prisma/client/wasm";
+// import { Company } from "@prisma/client/wasm";
 
 
 const ApiKey = process.env.OPEN_AI_KEY;
@@ -26,7 +26,7 @@ export const openAiCall: RequestHandler = async (req: Request, res: Response, ne
       function: {
         name: "get_stock_data",
         description:
-          "Get the symbol for a given stock using a function and not preknown knowledge.",
+          "Get the symbol for a given stock using a function and not preknown knowledge, use function call.",
         parameters: {
           type: "object",
           properties: {
@@ -36,7 +36,7 @@ export const openAiCall: RequestHandler = async (req: Request, res: Response, ne
             },
             companyHistory: {
               type: "string",
-              description: "a detailed description of the company",
+              description: "a detailed description of the company using the function call",
             },
           },
           required: ["symbol", "companyHistory"],
@@ -85,14 +85,15 @@ async function processCompletion(
 
         const stock = await existingStock(symbol);
         if (stock) {
-          return stock
+          return {...stock,companyHistory}
         } else {
           const stockData = await addStock(symbol);
           console.log("Stock Data:", stockData);
-          return stockData;  
+          return {...stockData,companyHistory};  
       }
     }
   }
+  console.log(completion);
    throw new Error("Error processing tool calls");
   } catch (error) {
     console.error("Error processing tool calls:", error);

@@ -23,6 +23,7 @@ export interface Company{
   change?:number,
   average_volume?:number,
   figi_code?: string,
+  companyHistory?:string | "default response",
 }
 
 // export interface CompanyData {
